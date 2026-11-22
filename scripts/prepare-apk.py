@@ -11,6 +11,13 @@ def replace_once(path: Path, old: str, new: str) -> None:
         raise RuntimeError(f"Expected exactly one match in {path}, found {count}: {old!r}")
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
+def replace_all(path: Path, old: str, new: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    count = text.count(old)
+    if count == 0:
+        raise RuntimeError(f"Expected at least one match in {path}: {old!r}")
+    path.write_text(text.replace(old, new), encoding="utf-8")
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--launcher-root", type=Path, required=True)
@@ -35,12 +42,12 @@ def main() -> None:
     # versions currently advertise API 37 as their minimum compile SDK).
     replace_once(gradle, '2026.09.00', '2025.08.00')
     replace_once(gradle, '1.19.1', '1.17.0')
-    replace_once(gradle, '2.11.0', '2.9.3')
-    replace_once(gradle, '1.13.0', '1.10.1')
+    replace_all(gradle, '2.11.0', '2.9.3')
+    replace_all(gradle, '1.13.0', '1.10.1')
     replace_once(gradle, '1.8.0', '1.7.1')
     replace_once(gradle, '3.18.2', '3.15.0')
-    replace_once(gradle, '5.5.0', '5.1.0')
-    replace_once(gradle, '1.11.0', '1.9.0')
+    replace_all(gradle, '5.5.0', '5.1.0')
+    replace_all(gradle, '1.11.0', '1.9.0')
     replace_once(gradle, '1.10.0', '1.9.0')
 
     replace_once(gradle, 'applicationId = "com.geode.launcher"', 'applicationId = "com.amethisty.launcher"')
