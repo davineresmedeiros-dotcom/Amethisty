@@ -34,7 +34,7 @@ jobs:
       - name: Run native tests
         run: |
           cmake -S . -B build-host -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
-          cmake --build build-host --target amethisty_manifest_tests amethisty_package_tests --parallel 2
+          cmake --build build-host --target amethisty_manifest_tests amethisty_package_tests amethisty_native_loader_tests --parallel 2
           ctest --test-dir build-host --output-on-failure
       - name: Install Android SDK
         uses: android-actions/setup-android@v3
