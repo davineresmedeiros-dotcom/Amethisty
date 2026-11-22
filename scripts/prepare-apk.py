@@ -18,7 +18,7 @@ def main() -> None:
     args = parser.parse_args()
 
     root = args.launcher_root.resolve()
-    repo = Path(__file__).resolve().parent
+    repo = Path(__file__).resolve().parent.parent
     gradle = root / "app/build.gradle.kts"
     constants = root / "app/src/main/java/com/geode/launcher/utils/Constants.kt"
     strings = root / "app/src/main/res/values/strings.xml"

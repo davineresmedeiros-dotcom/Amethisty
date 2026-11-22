@@ -24,3 +24,7 @@ See Android integration, package format, and native mod API documentation.
 Native mods execute inside the game process and are not sandboxed. Load only mods from sources you trust.
 
 Amethisty's own code is MIT licensed; third-party components retain their original licenses and notices.
+
+## APK build
+
+The arm64 launcher APK is built through the manual GitHub Actions workflow. See [APK build instructions](docs/apk-build.md).
