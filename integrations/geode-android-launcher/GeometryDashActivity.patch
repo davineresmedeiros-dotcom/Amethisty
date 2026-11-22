@@ -1,0 +1,10 @@
+diff --git a/app/src/main/java/com/geode/launcher/GeometryDashActivity.kt b/app/src/main/java/com/geode/launcher/GeometryDashActivity.kt
+--- a/app/src/main/java/com/geode/launcher/GeometryDashActivity.kt
++++ b/app/src/main/java/com/geode/launcher/GeometryDashActivity.kt
+@@
+         LauncherFix.performPatches()
+ 
++        // Load Amethisty after the game libraries and launcher patches.
++        AmethistyLoader.load()
++
+         loadInternalMods()
