@@ -22,7 +22,9 @@ NativeMod& NativeMod::operator=(NativeMod&& other) noexcept {
 bool NativeMod::loaded() const noexcept { return handle_ != nullptr; }
 void NativeMod::unload() noexcept {
     if (!handle_) return;
-    if (shutdown_) shutdown_();
+    if (shutdown_) {
+        try { shutdown_(); } catch (...) { /* Never let a mod exception escape unload. */ }
+    }
     dlclose(handle_);
     handle_ = nullptr; shutdown_ = nullptr;
 }
@@ -67,7 +69,9 @@ bool loadNativeMod(const std::string& path, const Host& host,
     if (symbolError) shutdown = nullptr;
     if (!init(&host)) {
         error = "Mod initialization returned failure.";
-        if (shutdown) shutdown();
+        if (shutdown) {
+            try { shutdown(); } catch (...) { /* Ignore exceptions during failed init cleanup. */ }
+        }
         dlclose(handle); return false;
     }
     output.handle_ = handle; output.shutdown_ = shutdown;

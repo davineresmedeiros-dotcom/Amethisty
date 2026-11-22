@@ -11,7 +11,9 @@ The project separates package handling from game integration so each layer can b
 
 ## 2. Android and game integration
 - Confirm installed game version code and ABI on the target device.
-- Confirm JNI entry and Cocos detection in logcat.
+- [x] Add JNI entry and Cocos runtime detection.
+- [x] Add launcher JNI initialization to scan, extract, and attempt loading mods.
+- [ ] Verify JNI startup and mod loading on the target device.
 - Add game hooks only after target bindings and offsets are verified.
 
 ## 3. Native module loading

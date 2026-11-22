@@ -1,15 +1,6 @@
 name: Amethisty Android - Manual Build
 on:
   workflow_dispatch:
-    inputs:
-      abi:
-        description: Android ABI
-        required: true
-        type: choice
-        options:
-          - arm64-v8a
-          - armeabi-v7a
-        default: arm64-v8a
   push:
     branches:
       - main

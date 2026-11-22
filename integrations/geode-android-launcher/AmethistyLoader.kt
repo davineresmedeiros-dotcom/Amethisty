@@ -7,7 +7,6 @@ import java.io.File
 internal object AmethistyLoader {
     private const val TAG = "Amethisty"
 
-    @JvmStatic
     private external fun initializeNative(modsDirectory: String, privateDirectory: String): Boolean
 
     fun load(context: Context): Boolean {

@@ -46,10 +46,6 @@ Java_com_geode_launcher_AmethistyLoader_initializeNative(
     env->ReleaseStringUTFChars(modsDirectory, mods);
     env->ReleaseStringUTFChars(privateDirectory, priv);
     if (!scanned) { logInfo("Could not scan mod directory; game continues."); return JNI_FALSE; }
-    for (const auto& candidate : g_modManager.candidates()) {
-        if (!candidate.error.empty()) __android_log_print(ANDROID_LOG_WARN, kLogTag,
-            "Mod %s: %s", candidate.id.c_str(), candidate.error.c_str());
-    }
     const amethisty::Host host{amethisty::MOD_API_VERSION, &hostLog};
     const bool allLoaded = g_modManager.loadNativeMods(host);
     for (const auto& candidate : g_modManager.candidates()) {
