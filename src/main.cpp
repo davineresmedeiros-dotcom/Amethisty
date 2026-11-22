@@ -24,7 +24,7 @@ void logRuntimeStatus() {
     if (!status.cocosLoaded) {
         logInfo("Cocos library was not detected. No hooks were installed.");
     } else {
-        logInfo("Cocos library detected. Game hooks remain disabled until 2.2091 bindings are verified.");
+        logInfo("Cocos library detected. Game hooks remain disabled until 2.2.145 bindings are verified.");
     }
 }
 }
