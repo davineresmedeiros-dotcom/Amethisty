@@ -13,7 +13,7 @@ This roadmap separates package handling from game integration so each layer can 
 - Use the verified Android launcher load sequence as the integration reference.
 - Package libamethisty.so for the launcher's matching ABI and load it after Cocos and launcher patches.
 - Confirm the JNI entry and Cocos detection in logcat on the target device.
-- Verify the exact Geometry Dash 2.2091 APK/version code and ABI.
+- Confirm Geometry Dash Android 2.2.145 (expected version code 42) and the installed ABI from the exact APK/device.
 - Add hooks only after the target bindings and offsets are verified.
 
 ## 3. Archive and manifest handling (after integration)
