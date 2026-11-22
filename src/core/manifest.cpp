@@ -226,6 +226,27 @@ bool parseManifest(const std::string& json, ModManifest& manifest,
         return false;
     }
 
+    // Reject duplicate keys throughout the top-level manifest, including unknown keys.
+    std::vector<std::string> seenKeys;
+    int keyIndex = 1;
+    while (keyIndex < static_cast<int>(tokens.size()) &&
+           tokens[static_cast<std::size_t>(keyIndex)].start < tokens[0].end - 1) {
+        std::string decodedKey;
+        const int valueIndex = keyIndex + 1;
+        if (tokens[static_cast<std::size_t>(keyIndex)].type != JSMN_STRING ||
+            valueIndex >= static_cast<int>(tokens.size()) ||
+            !decodeString(json, tokens[static_cast<std::size_t>(keyIndex)], decodedKey)) {
+            error = "Invalid manifest object key.";
+            return false;
+        }
+        if (std::find(seenKeys.begin(), seenKeys.end(), decodedKey) != seenKeys.end()) {
+            error = "Duplicate manifest key: " + decodedKey;
+            return false;
+        }
+        seenKeys.push_back(std::move(decodedKey));
+        keyIndex = nextToken(tokens, valueIndex);
+    }
+
     int formatIndex = -1;
     bool duplicate = false;
     if (!findField(json, tokens, "format", formatIndex, duplicate) ||
