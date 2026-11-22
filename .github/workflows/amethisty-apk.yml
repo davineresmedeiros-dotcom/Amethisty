@@ -30,10 +30,11 @@ jobs:
           cache: gradle
           cache-dependency-path: launcher/gradle/wrapper/gradle-wrapper.properties
 
-      - name: Install Android SDK
+      - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          packages: "platform-tools,platforms;android-37"
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-37"
 
       - name: Install CMake, Ninja and zlib headers
         run: sudo apt-get update && sudo apt-get install -y cmake ninja-build zlib1g-dev
