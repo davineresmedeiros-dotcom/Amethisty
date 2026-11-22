@@ -10,9 +10,11 @@ add_library(amethisty SHARED
     src/main.cpp
     src/android/game_runtime.cpp
     src/core/mod_manager.cpp
+    src/core/manifest.cpp
 )
 
 target_include_directories(amethisty PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/jsmn
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
