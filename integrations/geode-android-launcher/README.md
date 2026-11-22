@@ -30,9 +30,11 @@ The patch inserts AmethistyLoader.load() directly after LauncherFix.performPatch
 
 The patch is based on the upstream source layout at the time this integration was prepared. If the launcher source has changed, apply the same insertion manually at the equivalent startup point rather than forcing a stale patch.
 
-## Important target-version warning
+## Target version
 
-The upstream launcher Constants.kt currently declares supported version string 2.2.144 and supported version code 41. Amethisty targets Geometry Dash 2.2091, so do not assume the current upstream launcher release supports that target. The launcher itself must first be updated and tested for the target game version.
+Amethisty's current target is Geometry Dash Android 2.2.145. Version code 42 is the expected value from version listings, but should be confirmed against the exact APK metadata before relying on it for launcher compatibility checks.
+
+The upstream launcher source consulted for this integration declares support for 2.2.144 / version code 41. That does not establish compatibility with 2.2.145. Update and verify the launcher compatibility checks for the target build before compiling the integrated launcher.
 
 ## Verify on device
 
