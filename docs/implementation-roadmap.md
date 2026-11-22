@@ -8,7 +8,7 @@ This roadmap separates package handling from game integration so each layer can 
 - Reject symlinks and keep scan order deterministic.
 - Do not treat filename-derived metadata as trusted manifest data.
 
-## 2. Archive and manifest handling (next)
+## 2. Android and game integration (in progress)\n\n- Verify the exact Geometry Dash 2.2091 APK, package ID, ABI, and native library load order.\n- Integrate the native library through the appropriate launcher/APK startup path.\n- Confirm runtime library detection in logcat.\n- Add hooks only after the target bindings and offsets are verified.\n\n## 3. Archive and manifest handling (after integration)
 
 - Add a ZIP reader with bounded entry count, file size, and decompressed size.
 - Parse `manifest.json` with a small, tested JSON parser.
