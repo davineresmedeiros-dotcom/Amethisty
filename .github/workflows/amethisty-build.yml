@@ -18,6 +18,8 @@ on:
       - "CMakeLists.txt"
       - "src/**"
       - "include/**"
+      - "third_party/**"
+      - "tests/**"
       - ".github/workflows/amethisty-build.yml"
 
 permissions:
@@ -33,6 +35,12 @@ jobs:
 
       - name: Install CMake and Ninja
         run: sudo apt-get update && sudo apt-get install -y cmake ninja-build
+
+      - name: Run native manifest tests
+        run: |
+          cmake -S . -B build-host -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build-host --target amethisty_manifest_tests --parallel 2
+          ctest --test-dir build-host --output-on-failure
 
       - name: Install Android SDK
         uses: android-actions/setup-android@v3
