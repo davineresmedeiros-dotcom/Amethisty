@@ -1,30 +1,50 @@
 # Android and Geometry Dash integration
 
-## Current integration stage
+## Confirmed Android entry point
 
-Amethisty currently provides a JNI shared-library entry point. On Android, `JNI_OnLoad` verifies that it can obtain a JNI 1.6 environment and logs the process ABI plus whether the already-loaded `libcocos2dcpp.so` and `libgame.so` libraries are visible.
+The official Geode Android launcher source provides a concrete integration point. Its GeometryDashActivity.tryLoadGame() flow:
 
-The runtime inspection uses `dlopen(..., RTLD_NOLOAD)` and immediately releases the temporary handles. It does not load another copy of the game libraries.
+1. Sets up game data redirection.
+2. Initializes Cocos2d-x and the launcher context.
+3. Loads libfmod.so and libcocos2dcpp.so.
+4. Applies LauncherFix.performPatches().
+5. Loads internal mods and creates the game view.
+6. Loads Geode after the post-library setup.
 
-## What this does not do yet
+Geometry Dash's game code is hosted in libcocos2dcpp.so; the launcher source does not load a separate libgame.so. Amethisty's runtime inspection has been corrected to check the actual Cocos library only.
 
-- It does not provide an Android launcher or patch an APK.
-- It does not inject itself into Geometry Dash.
-- It does not initialize Cocos2d-x.
-- It does not install hooks or patch game code.
-- It does not load `.amethyst` packages or mod libraries.
+Reference implementation: https://github.com/geode-sdk/android-launcher, especially app/src/main/java/com/geode/launcher/GeometryDashActivity.kt and utils/Constants.kt.
 
-## Integration order to verify on-device
+## Amethisty launcher adapter
 
-The native library must be loaded by the Android app/launcher as part of the game's native startup, after the game libraries are available if runtime inspection is expected to report them. The exact Java/smali loading location depends on the installed Geometry Dash APK and its version; do not paste legacy instructions for an older APK without checking the actual package.
+A small Kotlin adapter is provided at integrations/geode-android-launcher/AmethistyLoader.kt. It calls System.loadLibrary("amethisty") and logs a load failure without preventing the game from starting.
 
-For the target 2.2091 build, verify the package ID, ABI, library names, and native load order from the installed APK before wiring hooks. The legacy Android example describes an older setup and is not authoritative for this target.
+To integrate it into a launcher source project:
 
-## Next integration work
+1. Add AmethistyLoader.kt to the launcher's app/src/main/java/com/geode/launcher/ source directory.
+2. Package the native output as libamethisty.so in the matching ABI folder under app/src/main/jniLibs/ (for example, arm64-v8a and armeabi-v7a). The launcher and native library must use the same ABI.
+3. In GeometryDashActivity.tryLoadGame(), call AmethistyLoader.load() immediately after LauncherFix.performPatches() and before loadInternalMods().
 
-1. Confirm the target APK's Java load sequence and native library filenames.
-2. Add a launcher/injection integration appropriate to the actual APK, preserving the original game libraries and signing requirements.
-3. Validate runtime status in logcat.
-4. Only then add version-verified Cocos/game bindings and hook initialization.
+At this point the launcher has already loaded Cocos and applied its startup patches, so JNI_OnLoad can report the expected runtime state. This adapter is a source integration example; it does not modify or re-sign an installed APK by itself.
 
-Until those steps are complete, the library is a JNI/runtime-inspection prototype, not an installable loader.
+## Target version notes
+
+The launcher source identifies Geometry Dash's package as com.robtopx.geometryjump. Its version map identifies Geometry Dash 2.2091 as version code 43. Confirm the installed game's version and ABI before building or testing; launcher releases may not yet support every game version.
+
+## Current implementation status
+
+Implemented in this repository:
+
+- JNI 1.6 entry point.
+- ABI detection.
+- Non-invasive detection of an already-loaded libcocos2dcpp.so.
+- Kotlin launcher adapter that requests loading libamethisty.so.
+
+Not implemented yet:
+
+- A complete Amethisty launcher application or APK patcher.
+- Automatic packaging of the native library into a launcher.
+- Verified Cocos/game bindings or hooks for Geometry Dash 2.2091.
+- ZIP archive reading, manifest.json parsing, extraction, or mod loading.
+
+Do not add hooks or guessed offsets until the exact 2.2091 native binary and bindings are verified. This repository has not been compiled or device-tested by the project assistant.
