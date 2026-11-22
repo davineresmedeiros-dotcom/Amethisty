@@ -17,15 +17,17 @@ Reference implementation: https://github.com/geode-sdk/android-launcher, especia
 
 ## Amethisty launcher adapter
 
-A small Kotlin adapter is provided at integrations/geode-android-launcher/AmethistyLoader.kt. It calls System.loadLibrary("amethisty") and logs a load failure without preventing the game from starting.
+The Kotlin adapter at integrations/geode-android-launcher/AmethistyLoader.kt calls System.loadLibrary("amethisty") and logs a load failure without preventing the game from starting.
+
+The source patch at integrations/geode-android-launcher/GeometryDashActivity.patch inserts the load call after LauncherFix.performPatches() and before loadInternalMods().
 
 To integrate it into a launcher source project:
 
 1. Add AmethistyLoader.kt to the launcher's app/src/main/java/com/geode/launcher/ source directory.
-2. Package the native output as libamethisty.so in the matching ABI folder under app/src/main/jniLibs/ (for example, arm64-v8a and armeabi-v7a). The launcher and native library must use the same ABI.
-3. In GeometryDashActivity.tryLoadGame(), call AmethistyLoader.load() immediately after LauncherFix.performPatches() and before loadInternalMods().
+2. Apply GeometryDashActivity.patch to the launcher's GeometryDashActivity.kt.
+3. Package the native output as libamethisty.so in the matching ABI folder under app/src/main/jniLibs/ (for example, arm64-v8a and armeabi-v7a). The launcher and native library must use the same ABI.
 
-At this point the launcher has already loaded Cocos and applied its startup patches, so JNI_OnLoad can report the expected runtime state. This adapter is a source integration example; it does not modify or re-sign an installed APK by itself.
+At this point the launcher has already loaded Cocos and applied its startup patches, so JNI_OnLoad can report the expected runtime state. These files are source integration artifacts; they do not modify or re-sign an installed APK by themselves.
 
 ## Target version notes
 
@@ -38,7 +40,7 @@ Implemented in this repository:
 - JNI 1.6 entry point.
 - ABI detection.
 - Non-invasive detection of an already-loaded libcocos2dcpp.so.
-- Kotlin launcher adapter that requests loading libamethisty.so.
+- Kotlin launcher adapter and source patch that request loading libamethisty.so.
 
 Not implemented yet:
 
