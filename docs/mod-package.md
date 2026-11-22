@@ -1,6 +1,6 @@
 # Amethisty mod package format
 
-**Status: package-format proposal; archive parsing is not implemented yet.**
+**Status: format 1 manifest validator implemented; ZIP archive parsing and extraction are not implemented yet.**
 
 The file extension is `.amethyst`. The intended container is a ZIP archive with this layout:
 
@@ -30,7 +30,7 @@ The package root must contain `manifest.json`. The native module filename must m
 }
 ```
 
-## Validation rules planned for format 1
+## Format 1 validation rules
 
 - `format` must be the integer `1`.
 - `id` must be unique and use lowercase reverse-domain-style identifiers.
@@ -45,7 +45,7 @@ The package root must contain `manifest.json`. The native module filename must m
 
 The native `ModManager` currently scans a selected directory for regular files with the `.amethyst` extension. It rejects symlinks, skips hidden entries, and sorts the results deterministically. Candidate metadata is still filename-derived and provisional.
 
-It does **not** open ZIP archives, parse manifests, extract files, check ABI compatibility, or load native mod libraries. The scan result is not safe or sufficient to pass to `dlopen()`.
+The new native `parseManifest` module validates JSON format 1, required strings, lowercase reverse-domain-style IDs, the supported game version, safe `mod/*.so` paths, and duplicate top-level keys. Native tests cover valid metadata, incompatible game versions, path traversal, duplicate keys, and unsupported format versions. The `ModManager` does **not** yet open ZIP archives, call the manifest parser for scanned packages, extract files, check ABI compatibility, or load native mod libraries. The scan result is not safe or sufficient to pass to `dlopen()`.
 
 ## Native code warning
 
