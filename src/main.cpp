@@ -16,16 +16,15 @@ void logRuntimeStatus() {
     __android_log_print(
         ANDROID_LOG_INFO,
         kLogTag,
-        "Android integration initialized; ABI=%s; cocos2dcpp=%s; libgame=%s",
+        "Android integration reached; ABI=%s; libcocos2dcpp=%s",
         status.abi,
-        status.cocosLoaded ? "loaded" : "not loaded",
-        status.gameLoaded ? "loaded" : "not loaded"
+        status.cocosLoaded ? "loaded" : "not loaded"
     );
 
-    if (!status.cocosLoaded || !status.gameLoaded) {
-        logInfo("Game libraries are not both visible yet; no hooks were installed.");
+    if (!status.cocosLoaded) {
+        logInfo("Cocos library was not detected. No hooks were installed.");
     } else {
-        logInfo("Game libraries detected. Hook installation remains disabled pending verified 2.2091 bindings.");
+        logInfo("Cocos library detected. Game hooks remain disabled until 2.2091 bindings are verified.");
     }
 }
 }
