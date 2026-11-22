@@ -31,10 +31,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Install CMake, Ninja and zlib headers
         run: sudo apt-get update && sudo apt-get install -y cmake ninja-build zlib1g-dev
-      - name: Run native manifest tests
+      - name: Run native tests
         run: |
           cmake -S . -B build-host -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
-          cmake --build build-host --target amethisty_manifest_tests --parallel 2
+          cmake --build build-host --target amethisty_manifest_tests amethisty_package_tests --parallel 2
           ctest --test-dir build-host --output-on-failure
       - name: Install Android SDK
         uses: android-actions/setup-android@v3
