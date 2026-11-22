@@ -1,6 +1,6 @@
 # Amethisty
 
-Amethisty is an Android mod-loader project targeting Geometry Dash 2.2091.
+Amethisty is an Android mod-loader project targeting Geometry Dash **2.2.145** (Android version code **42**, pending confirmation from the exact installed APK metadata).
 
 ## Status
 
@@ -10,7 +10,7 @@ The native code has a JNI entry point, ABI detection, non-invasive detection of 
 
 ## Planned features
 
-- Android native loader for Geometry Dash 2.2091
+- Android native loader for Geometry Dash 2.2.145
 - In-game mod management
 - Dedicated .amethyst mod package format
 - Native mod API and developer SDK
@@ -23,7 +23,7 @@ We are studying and adapting these projects:
 - [Android-ML](https://github.com/BlackTeaML/Android-ML)
 - [Geode Android Launcher](https://github.com/geode-sdk/android-launcher) for the Android startup integration reference
 
-Legacy mod examples are not assumed to work with Geometry Dash 2.2091 unchanged. See [the compatibility audit](docs/base-audit.md). Preserve original copyright and license notices for any files copied or adapted.
+Legacy mod examples are not assumed to work with Geometry Dash 2.2.145 unchanged. See [the compatibility audit](docs/base-audit.md). Preserve original copyright and license notices for any files copied or adapted.
 
 All builds and device testing are performed manually.
 
