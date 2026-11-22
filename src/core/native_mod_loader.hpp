@@ -2,6 +2,7 @@
 #include <amethisty/mod_api.hpp>
 #include <string>
 namespace amethisty {
+using ModInitFn = ModInit;
 using ModShutdownFn = void (*)();
 class NativeMod {
 public:
