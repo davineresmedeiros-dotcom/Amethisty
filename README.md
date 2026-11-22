@@ -6,7 +6,7 @@ Amethisty is an Android mod-loader project targeting Geometry Dash 2.2091.
 
 **Prototype / early development — not ready to install or compile as a complete loader.**
 
-The current native code has a basic Android library entry point and a directory scanner for files ending in `.amethyst`. It does not yet read package archives, parse mod manifests, load mods, or install game hooks.
+The current native code has a JNI entry point, Android runtime inspection (ABI and already-loaded game libraries), and a directory scanner for files ending in `.amethyst`. It does not yet inject itself into the game, install game hooks, read package archives, parse manifests, or load mods. See [Android integration status](docs/android-integration.md).
 
 ## Planned features
 
