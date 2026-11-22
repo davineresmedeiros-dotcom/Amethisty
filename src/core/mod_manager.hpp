@@ -9,11 +9,11 @@ namespace amethisty {
 struct ModCandidate {
     // Absolute or app-private path to the package file.
     std::string packagePath;
-    // Temporary filename-derived ID until manifest.json parsing is added.
+    // Manifest ID after scanAndExtract; filename placeholder after scan only.
     std::string id;
     std::string name;
     std::string version;
-    // Empty until the package archive is validated and extracted safely.
+    // Populated only after the package archive is validated and extracted safely.
     std::string libraryPath;
     bool valid = false;
     bool loaded = false;

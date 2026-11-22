@@ -1,36 +1,26 @@
 # Amethisty
 
-Amethisty is an Android mod-loader project targeting Geometry Dash **2.2.145** (Android version code **42**, pending confirmation from the exact installed APK metadata).
+Amethisty is an Android native mod-loader project targeting Geometry Dash 2.2.145. Verify the exact installed APK version code before enforcing compatibility.
 
-## Status
+## Current status
+Native core prototype and launcher source integration in progress. Not yet a standalone APK.
 
-**Prototype / early development — not ready to install or compile as a complete loader.**
+Implemented:
+- JNI entry and Android ABI/runtime inspection.
+- Format-1 manifest validation for GD 2.2.145.
+- Bounded ZIP package reader and private extraction for .amethyst.
+- ModManager package discovery, validation, duplicate-ID rejection, and extraction.
+- Arm64 ELF validation and native module loading through the public include/amethisty/mod_api.hpp API v1.
+- Per-mod load errors and native tests in GitHub Actions.
+- Launcher adapter source that initializes package loading after game libraries are ready.
 
-The native code has a JNI entry point, ABI detection, non-invasive detection of the already-loaded Geometry Dash Cocos library, a launcher-load adapter, and a directory scanner for files ending in .amethyst. It does not yet install game hooks, read package archives, extract or load mods. A standalone, tested format-1 manifest validator has been added; package scanning is not connected to it yet. See [Android integration status](docs/android-integration.md) and the [launcher source integration guide](integrations/geode-android-launcher/README.md).
+See Android integration, package format, and native mod API documentation.
 
-## Planned features
+## Next milestones
+1. Verify integrated runtime on a backed-up GD 2.2.145 installation.
+2. Finish launcher integration and compatibility checks.
+3. Build the Amethisty APK with package import and mod management UI.
 
-- Android native loader for Geometry Dash 2.2.145
-- In-game mod management
-- Dedicated .amethyst mod package format
-- Native mod API and developer SDK
+Native mods execute inside the game process and are not sandboxed. Load only mods from sources you trust.
 
-## Development approach
-
-We are studying and adapting these projects:
-
-- [GD Mod Example Android](https://github.com/iAndyHD3/gd-mod-example-android)
-- [Android-ML](https://github.com/BlackTeaML/Android-ML)
-- [Geode Android Launcher](https://github.com/geode-sdk/android-launcher) for the Android startup integration reference
-
-Legacy mod examples are not assumed to work with Geometry Dash 2.2.145 unchanged. See [the compatibility audit](docs/base-audit.md). Preserve original copyright and license notices for any files copied or adapted.
-
-All builds and device testing are performed manually.
-
-## Mod package
-
-See [the Amethisty package specification](docs/mod-package.md).
-
-## License
-
-Amethisty's own code is under the MIT License in this repository. Third-party components retain their original licenses and notices.
+Amethisty's own code is MIT licensed; third-party components retain their original licenses and notices.
