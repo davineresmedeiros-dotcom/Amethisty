@@ -36,8 +36,8 @@ bool isAlreadyLoaded(const char* libraryName) noexcept {
 GameRuntimeStatus inspectLoadedGame() noexcept {
     GameRuntimeStatus status{};
     status.abi = currentAbi();
+    // Geometry Dash's native game code is hosted in libcocos2dcpp.so.
     status.cocosLoaded = isAlreadyLoaded("libcocos2dcpp.so");
-    status.gameLoaded = isAlreadyLoaded("libgame.so");
     return status;
 }
 
