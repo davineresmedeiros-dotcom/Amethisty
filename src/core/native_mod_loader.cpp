@@ -55,7 +55,7 @@ bool loadNativeMod(const std::string& path, const ModHostApi& host,
     }
     if (!isArm64ElfLibrary(path, error)) return false;
     void* handle = dlopen(path.c_str(), RTLD_NOW | RTLD_LOCAL);
-    if (!handle) { error = dlerror() ? dlerror() : "dlopen failed."; return false; }
+    if (!handle) { const char* message = dlerror(); error = message ? message : "dlopen failed."; return false; }
     dlerror();
     auto version = reinterpret_cast<ModApiVersionFn>(dlsym(handle, kVersionSymbol));
     const char* symbolError = dlerror();
