@@ -57,7 +57,7 @@ bool loadNativeMod(const std::string& path, const Host& host,
     if (!handle) { const char* message = dlerror(); error = message ? message : "dlopen failed."; return false; }
     dlerror();
     auto init = reinterpret_cast<ModInitFn>(dlsym(handle, kInitSymbol));
-    symbolError = dlerror();
+    const char* symbolError = dlerror();
     if (symbolError || !init) {
         error = "Required mod init symbol is missing."; dlclose(handle); return false;
     }
