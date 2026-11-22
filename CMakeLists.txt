@@ -28,3 +28,17 @@ target_compile_options(amethisty PRIVATE
 if(ANDROID)
     target_link_libraries(amethisty PRIVATE log dl)
 endif()
+
+include(CTest)
+if(BUILD_TESTING)
+    add_executable(amethisty_manifest_tests
+        tests/manifest_test.cpp
+        src/core/manifest.cpp
+    )
+    target_include_directories(amethisty_manifest_tests PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/core
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/jsmn
+    )
+    target_compile_options(amethisty_manifest_tests PRIVATE -Wall -Wextra)
+    add_test(NAME amethisty_manifest_tests COMMAND amethisty_manifest_tests)
+endif()
