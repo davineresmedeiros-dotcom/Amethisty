@@ -1,8 +1,8 @@
 # Amethisty mod package format
 
-**Status: proposal for the first package format.**
+**Status: package-format proposal; archive parsing is not implemented yet.**
 
-The file extension is `.amethyst`. A package is planned as a ZIP container with this layout:
+The file extension is `.amethyst`. The intended container is a ZIP archive with this layout:
 
 ```text
 ExampleMod.amethyst
@@ -13,7 +13,7 @@ ExampleMod.amethyst
     └── (optional mod assets)
 ```
 
-The package's root must contain `manifest.json`. The native module filename must match the manifest's `library` field and target the device ABI supported by the loader.
+The package root must contain `manifest.json`. The native module filename must match the manifest's `library` field and target the ABI of the running game process.
 
 ## Manifest
 
@@ -30,16 +30,23 @@ The package's root must contain `manifest.json`. The native module filename must
 }
 ```
 
+## Validation rules planned for format 1
+
+- `format` must be the integer `1`.
+- `id` must be unique and use lowercase reverse-domain-style identifiers.
+- `name`, `version`, and `library` must be non-empty strings.
+- `game` must match the supported Geometry Dash version.
+- `library` must be a relative path inside the archive, use forward slashes, and point to a regular file.
+- Reject absolute paths, parent-directory components (`..`), duplicate manifest keys, malformed JSON, duplicate mod IDs, and missing native libraries.
+- Extraction must stay inside the loader's private mod directory. Never trust archive entry paths.
+- Do not load a library until the archive and manifest have passed validation and extraction succeeds.
+
 ## Current implementation
 
-The current native ModManager only enumerates files ending in `.amethyst` in a directory. It derives a temporary display ID from the filename. It does **not** open ZIP archives, parse manifests, extract files, or load native mod libraries yet. These are the next implementation steps.
+The native `ModManager` currently scans a selected directory for regular files with the `.amethyst` extension. It rejects symlinks, skips hidden entries, and sorts the results deterministically. Candidate metadata is still filename-derived and provisional.
 
-## Validation and security requirements
+It does **not** open ZIP archives, parse manifests, extract files, check ABI compatibility, or load native mod libraries. The scan result is not safe or sufficient to pass to `dlopen()`.
 
-- `format` identifies the package format version, not the mod version.
-- `id` must be unique and use lowercase reverse-domain-style identifiers.
-- `version` is the mod's semantic version.
-- `game` declares the supported Geometry Dash version.
-- The loader must reject malformed manifests, duplicate IDs, unsupported package versions, and missing libraries.
-- Package extraction must validate paths and must not allow files to escape the mod's own directory.
-- Mods are native code and can crash the game or access the process. Install only mods you trust.
+## Native code warning
+
+Amethisty mods are native code running in the game's process. A mod can crash the game or access process data. The loader cannot sandbox native mods; install only mods you trust.
