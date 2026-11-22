@@ -5,8 +5,7 @@
 #include <utility>
 namespace amethisty {
 namespace {
-constexpr const char* kVersionSymbol = "amethisty_mod_api_version";
-constexpr const char* kInitSymbol = "amethisty_mod_init";
+constexpr const char* kInitSymbol = MOD_ENTRY_SYMBOL;
 constexpr const char* kShutdownSymbol = "amethisty_mod_shutdown";
 }
 NativeMod::~NativeMod() { unload(); }
@@ -47,24 +46,15 @@ bool isArm64ElfLibrary(const std::string& path, std::string& error) {
     }
     return true;
 }
-bool loadNativeMod(const std::string& path, const ModHostApi& host,
+bool loadNativeMod(const std::string& path, const Host& host,
                    NativeMod& output, std::string& error) {
     output.unload(); error.clear();
-    if (host.structSize < sizeof(ModHostApi) || host.apiVersion != kModApiVersion) {
-        error = "Host API structure/version mismatch."; return false;
+    if (host.apiVersion != MOD_API_VERSION) {
+        error = "Host API version mismatch."; return false;
     }
     if (!isArm64ElfLibrary(path, error)) return false;
     void* handle = dlopen(path.c_str(), RTLD_NOW | RTLD_LOCAL);
     if (!handle) { const char* message = dlerror(); error = message ? message : "dlopen failed."; return false; }
-    dlerror();
-    auto version = reinterpret_cast<ModApiVersionFn>(dlsym(handle, kVersionSymbol));
-    const char* symbolError = dlerror();
-    if (symbolError || !version) {
-        error = "Required mod API version symbol is missing."; dlclose(handle); return false;
-    }
-    if (version() != kModApiVersion) {
-        error = "Mod API version is incompatible."; dlclose(handle); return false;
-    }
     dlerror();
     auto init = reinterpret_cast<ModInitFn>(dlsym(handle, kInitSymbol));
     symbolError = dlerror();
@@ -76,7 +66,9 @@ bool loadNativeMod(const std::string& path, const ModHostApi& host,
     symbolError = dlerror();
     if (symbolError) shutdown = nullptr;
     if (!init(&host)) {
-        error = "Mod initialization returned failure."; dlclose(handle); return false;
+        error = "Mod initialization returned failure.";
+        if (shutdown) shutdown();
+        dlclose(handle); return false;
     }
     output.handle_ = handle; output.shutdown_ = shutdown;
     return true;

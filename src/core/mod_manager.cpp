@@ -124,7 +124,7 @@ bool ModManager::scanAndExtract(const std::string& modsDirectory,
 }
 
 
-bool ModManager::loadNativeMods(const ModHostApi& host) {
+bool ModManager::loadNativeMods(const Host& host) {
     bool allLoaded = true;
     for (ModCandidate& candidate : m_candidates) {
         if (!candidate.valid || candidate.libraryPath.empty()) continue;

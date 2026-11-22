@@ -32,7 +32,7 @@ public:
     bool scanAndExtract(const std::string& modsDirectory, const std::string& privateDirectory);
 
     // Loads each extracted library after ELF and API checks. Mods are native code, not sandboxed.
-    bool loadNativeMods(const ModHostApi& host);
+    bool loadNativeMods(const Host& host);
 
     const std::vector<ModCandidate>& candidates() const noexcept;
 
