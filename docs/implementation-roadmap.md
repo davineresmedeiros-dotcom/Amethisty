@@ -16,11 +16,13 @@ This roadmap separates package handling from game integration so each layer can 
 - Confirm Geometry Dash Android 2.2.145 (expected version code 42) and the installed ABI from the exact APK/device.
 - Add hooks only after the target bindings and offsets are verified.
 
-## 3. Archive and manifest handling (after integration)
+## 3. Archive and manifest handling (manifest validation started)
 
 - Add a ZIP reader with bounded entry count, file size, and decompressed size.
-- Parse manifest.json with a small, tested JSON parser.
-- Validate format version, ID, game version, library path, and required fields.
+- [x] Parse manifest JSON with a small tokenizer and validate format 1.
+- [x] Validate required fields, ID syntax, supported game version, safe library path, and duplicate keys.
+- [x] Add native tests for valid and invalid manifests.
+- [ ] Add a bounded ZIP reader and connect package discovery to manifest parsing.
 - Extract only required files to an app-private directory using safe path handling.
 - Reject malformed archives, path traversal, duplicate IDs, and missing libraries.
 
@@ -39,4 +41,4 @@ This roadmap separates package handling from game integration so each layer can 
 
 ## Current limitation
 
-Amethisty is still a scaffold. The launcher adapter is a source integration example, not a complete launcher APK. Archive parsing, extraction, mod loading, game hooks, and device validation are not implemented. The project assistant has not compiled or device-tested this repository.
+Amethisty is still a scaffold. The launcher adapter is a source integration example, not a complete launcher APK. ZIP parsing, extraction, native mod loading, game hooks, and device validation are not implemented. Manifest validation exists as a tested standalone native module, but scanned `.amethyst` packages do not use it yet. The project assistant has not compiled or device-tested this repository.
