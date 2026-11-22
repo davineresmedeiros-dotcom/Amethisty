@@ -1,52 +1,23 @@
 # Amethisty mod package format
 
-**Status: format 1 manifest validator implemented; ZIP archive parsing and extraction are not implemented yet.**
+Status: format-1 manifest validation and a bounded ZIP reader/extractor exist. The ModManager does not yet call the reader, and native mods are not loaded.
 
-The file extension is `.amethyst`. The intended container is a ZIP archive with this layout:
+A .amethyst package is a ZIP archive containing a root manifest.json and the native library declared by the library field.
 
-```text
-ExampleMod.amethyst
-├── manifest.json
-├── mod/
-│   └── libExampleMod.so
-└── assets/
-    └── (optional mod assets)
-```
+Expected layout:
+- manifest.json
+- mod/libExampleMod.so
 
-The package root must contain `manifest.json`. The native module filename must match the manifest's `library` field and target the ABI of the running game process.
+Example manifest fields:
+- format: 1
+- id: author.examplemod
+- name: Example Mod
+- version: 1.0.0
+- game: 2.2.145
+- library: mod/libExampleMod.so
 
-## Manifest
+The reader supports stored and deflate entries. It limits archive size, entry count, and uncompressed data; rejects ZIP64, multi-disk, encrypted, duplicate, unsafe-path, symlink and special-file entries; checks local/central headers and CRC; and extracts only the declared library to app-private storage.
 
-```json
-{
-  "format": 1,
-  "id": "author.examplemod",
-  "name": "Example Mod",
-  "version": "1.0.0",
-  "author": "Author",
-  "description": "A short description.",
-  "game": "2.2.145",
-  "library": "mod/libExampleMod.so"
-}
-```
+The package reader is currently a standalone core API. ModManager::scan still only enumerates .amethyst files and uses provisional filename metadata. The extracted .so is not loaded or executed.
 
-## Format 1 validation rules
-
-- `format` must be the integer `1`.
-- `id` must be unique and use lowercase reverse-domain-style identifiers.
-- `name`, `version`, and `library` must be non-empty strings.
-- `game` must match the supported Geometry Dash version (2.2.145).
-- `library` must be a relative path inside the archive, use forward slashes, and point to a regular file.
-- Reject absolute paths, parent-directory components (`..`), duplicate manifest keys, malformed JSON, duplicate mod IDs, and missing native libraries.
-- Extraction must stay inside the loader's private mod directory. Never trust archive entry paths.
-- Do not load a library until the archive and manifest have passed validation and extraction succeeds.
-
-## Current implementation
-
-The native `ModManager` currently scans a selected directory for regular files with the `.amethyst` extension. It rejects symlinks, skips hidden entries, and sorts the results deterministically. Candidate metadata is still filename-derived and provisional.
-
-The new native `parseManifest` module validates JSON format 1, required strings, lowercase reverse-domain-style IDs, the supported game version, safe `mod/*.so` paths, and duplicate top-level keys. Native tests cover valid metadata, incompatible game versions, path traversal, duplicate keys, and unsupported format versions. The `ModManager` does **not** yet open ZIP archives, call the manifest parser for scanned packages, extract files, check ABI compatibility, or load native mod libraries. The scan result is not safe or sufficient to pass to `dlopen()`.
-
-## Native code warning
-
-Amethisty mods are native code running in the game's process. A mod can crash the game or access process data. The loader cannot sandbox native mods; install only mods you trust.
+Native mods run inside the game process and are not sandboxed. A later loading stage must verify ABI and the mod entry/API contract before loading any library.
