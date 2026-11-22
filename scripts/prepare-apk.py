@@ -26,9 +26,8 @@ def main() -> None:
     settings = root / "settings.gradle.kts"
     manifest = root / "app/src/main/AndroidManifest.xml"
 
-    # API 37 is declared by the pinned upstream launcher but isn't available
-    # from the runner's SDK package repository yet. API 36 is sufficient here.
-    replace_once(gradle, "compileSdk = 37", "compileSdk = 36")
+    # Keep compileSdk 37 because pinned launcher dependencies require it.
+    # targetSdk 36 keeps runtime behavior separate from compile API level.
     replace_once(gradle, "targetSdk = 37", "targetSdk = 36")
 
     replace_once(gradle, 'applicationId = "com.geode.launcher"', 'applicationId = "com.amethisty.launcher"')
