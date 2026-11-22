@@ -14,6 +14,8 @@ struct ModCandidate {
     std::string version;
     // Empty until the package archive is validated and extracted safely.
     std::string libraryPath;
+    bool valid = false;
+    std::string error;
 };
 
 class ModManager {
@@ -21,6 +23,10 @@ public:
     // Enumerates .amethyst files only. It does not parse archives or load code.
     // Returns false when the directory cannot be opened.
     bool scan(const std::string& modsDirectory);
+
+    // Validates package manifests, rejects duplicate IDs, then extracts libraries.
+    // This still does not load or execute native modules.
+    bool scanAndExtract(const std::string& modsDirectory, const std::string& privateDirectory);
 
     const std::vector<ModCandidate>& candidates() const noexcept;
 

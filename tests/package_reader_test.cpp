@@ -1,4 +1,5 @@
 #include "package_reader.hpp"
+#include "mod_manager.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -22,12 +23,14 @@ bool save(const std::string&p,const std::vector<unsigned char>&b){std::ofstream 
 bool ok(bool v,const char*msg){if(!v)std::cerr<<"FAILED: "<<msg<<'\n';return v;}
 }
 int main(){
- char temp[]="/tmp/amethisty-package-XXXXXX";char*d=mkdtemp(temp);if(!d)return 1;std::string root=d,archive=root+"/test.amethyst",payload="fake-library-bytes",error;int fails=0;
+ char temp[]="/tmp/amethisty-package-XXXXXX";char*d=mkdtemp(temp);if(!d)return 1;std::string root=d,archive=root+"/mods/test.amethyst",payload="fake-library-bytes",error;int fails=0;std::filesystem::create_directories(root+"/mods");
  auto good=zip({{"manifest.json",manifest("mod/libTest.so")},{"mod/libTest.so",payload}});
  fails+=!ok(save(archive,good),"write test ZIP");amethisty::ExtractedPackage result;
  fails+=!ok(amethisty::validateAndExtractPackage(archive,root+"/private",result,error),"valid package accepted");
  fails+=!ok(result.manifest.id=="author.examplemod"&&!result.libraryPath.empty(),"manifest and output path");
  std::ifstream f(result.libraryPath,std::ios::binary);std::string got((std::istreambuf_iterator<char>(f)),{});fails+=!ok(got==payload,"library extracted intact");
+ amethisty::ModManager manager;fails+=!ok(manager.scanAndExtract(root+"/mods",root+"/private-manager"),"ModManager package scan");
+ const auto& candidates=manager.candidates();fails+=!ok(candidates.size()==1&&candidates[0].valid&&candidates[0].id=="author.examplemod"&&!candidates[0].libraryPath.empty(),"ModManager uses manifest and extracts package");
  auto traversal=zip({{"manifest.json",manifest("mod/../escape.so")},{"mod/../escape.so",payload}});save(archive,traversal);
  fails+=!ok(!amethisty::validateAndExtractPackage(archive,root+"/bad",result,error),"traversal rejected");
  auto missing=zip({{"manifest.json",manifest("mod/missing.so")}});save(archive,missing);

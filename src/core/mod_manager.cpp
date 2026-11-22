@@ -1,4 +1,5 @@
 #include "mod_manager.hpp"
+#include "package_reader.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -6,6 +7,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <utility>
+#include <unordered_set>
 
 namespace amethisty {
 namespace {
@@ -77,6 +79,46 @@ bool ModManager::scan(const std::string& modsDirectory) {
               [](const ModCandidate& left, const ModCandidate& right) {
                   return left.packagePath < right.packagePath;
               });
+    return true;
+}
+
+
+bool ModManager::scanAndExtract(const std::string& modsDirectory,
+                                const std::string& privateDirectory) {
+    if (!scan(modsDirectory)) return false;
+
+    // Parse every manifest first, so duplicate IDs are rejected before any
+    // package can overwrite another package's extracted library.
+    std::unordered_set<std::string> ids;
+    for (ModCandidate& candidate : m_candidates) {
+        ModManifest manifest;
+        std::string error;
+        if (!readPackageManifest(candidate.packagePath, manifest, error)) {
+            candidate.error = error;
+            continue;
+        }
+        if (!ids.insert(manifest.id).second) {
+            candidate.error = "Duplicate mod ID: " + manifest.id;
+            continue;
+        }
+        candidate.id = manifest.id;
+        candidate.name = manifest.name;
+        candidate.version = manifest.version;
+        candidate.valid = true;
+    }
+
+    for (ModCandidate& candidate : m_candidates) {
+        if (!candidate.valid) continue;
+        ExtractedPackage package;
+        std::string error;
+        if (!validateAndExtractPackage(candidate.packagePath, privateDirectory,
+                                      package, error)) {
+            candidate.valid = false;
+            candidate.error = error;
+            continue;
+        }
+        candidate.libraryPath = package.libraryPath;
+    }
     return true;
 }
 

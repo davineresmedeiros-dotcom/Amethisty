@@ -39,6 +39,16 @@ bool writeFile(const std::string&p,const std::vector<unsigned char>&b,std::strin
 #endif
 ,0600);if(fd<0){e="Cannot create extracted library.";return false;}size_t i=0;while(i<b.size()){ssize_t n=write(fd,b.data()+i,b.size()-i);if(n<=0){close(fd);unlink(p.c_str());e="Library write failed.";return false;}i+=size_t(n);}int a=fsync(fd),z=close(fd);if(a||z){unlink(p.c_str());e="Could not finalize library.";return false;}return true;}
 }}
+
+bool amethisty::readPackageManifest(const std::string&path,ModManifest&manifest,std::string&error){
+ manifest=ModManifest{};error.clear();std::vector<unsigned char>b;if(!read(path,b,error))return false;
+ std::vector<E>es;size_t cd=0;if(!parse(b,es,cd,error))return false;
+ const E*man=nullptr;for(auto&x:es)if(x.n=="manifest.json"&&!x.dir)man=&x;
+ if(!man||man->us>AM){error="Root manifest.json missing/too large.";return false;}
+ std::vector<unsigned char>mb;if(!bytesOf(b,*man,cd,AM,mb,error))return false;
+ return parseManifest(std::string(mb.begin(),mb.end()),manifest,error);
+}
+
 bool amethisty::validateAndExtractPackage(const std::string&path,const std::string&privateRoot,ExtractedPackage&out,std::string&error){
  out=ExtractedPackage{};error.clear();std::vector<unsigned char>b;if(!read(path,b,error))return false;std::vector<E>es;size_t cd=0;if(!parse(b,es,cd,error))return false;
  const E*man=nullptr;for(auto&x:es)if(x.n=="manifest.json"&&!x.dir)man=&x;if(!man||man->us>AM){error="Root manifest.json missing/too large.";return false;}std::vector<unsigned char>mb;if(!bytesOf(b,*man,cd,AM,mb,error))return false;if(!parseManifest(std::string(mb.begin(),mb.end()),out.manifest,error))return false;
