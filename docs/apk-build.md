@@ -15,3 +15,5 @@ The preparation script:
 The resulting debug APK is signed with the standard Android debug key and can be installed for testing. It is not a release-signed distribution build. The workflow artifact expires after 14 days.
 
 Before distributing, verify the exact Geometry Dash APK version code on-device, test launch and mod import, review all upstream/third-party notices, and create a release signing configuration. Native mods are not sandboxed.
+
+The preparation script also replaces the launcher icon with an original Amethisty crystal vector drawable.

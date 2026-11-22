@@ -24,6 +24,7 @@ def main() -> None:
     strings = root / "app/src/main/res/values/strings.xml"
     activity = root / "app/src/main/java/com/geode/launcher/GeometryDashActivity.kt"
     settings = root / "settings.gradle.kts"
+    manifest = root / "app/src/main/AndroidManifest.xml"
 
     replace_once(gradle, 'applicationId = "com.geode.launcher"', 'applicationId = "com.amethisty.launcher"')
     replace_once(gradle, "versionCode = 31", "versionCode = 1")
@@ -44,6 +45,8 @@ def main() -> None:
                  '<string name="app_name" translatable="false">Amethisty</string>')
     replace_once(strings, '<string name="launcher_title">Geode</string>',
                  '<string name="launcher_title">Amethisty</string>')
+    replace_once(manifest, 'android:icon="@mipmap/ic_launcher"',
+                 'android:icon="@drawable/ic_amethisty_launcher"')
 
     insertion = (
         "        LauncherFix.performPatches()\n\n"
@@ -52,6 +55,11 @@ def main() -> None:
         "        loadInternalMods()"
     )
     replace_once(activity, "        LauncherFix.performPatches()\n\n        loadInternalMods()", insertion)
+
+    icon_source = repo / "integrations/geode-android-launcher/ic_amethisty_launcher.xml"
+    icon_target = root / "app/src/main/res/drawable/ic_amethisty_launcher.xml"
+    icon_target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(icon_source, icon_target)
 
     adapter_source = repo / "integrations/geode-android-launcher/AmethistyLoader.kt"
     adapter_target = root / "app/src/main/java/com/geode/launcher/AmethistyLoader.kt"
