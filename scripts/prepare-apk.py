@@ -26,9 +26,22 @@ def main() -> None:
     settings = root / "settings.gradle.kts"
     manifest = root / "app/src/main/AndroidManifest.xml"
 
-    # Keep compileSdk 37 because pinned launcher dependencies require it.
-    # targetSdk 36 keeps runtime behavior separate from compile API level.
+    # Android API 37 is not published in the runner SDK repository. Pin launcher
+    # libraries to API-36-compatible releases and compile against API 36.
+    replace_once(gradle, "compileSdk = 37", "compileSdk = 36")
     replace_once(gradle, "targetSdk = 37", "targetSdk = 36")
+
+    # Keep dependencies compatible with compileSdk 36 (upstream's latest
+    # versions currently advertise API 37 as their minimum compile SDK).
+    replace_once(gradle, '2026.09.00', '2025.08.00')
+    replace_once(gradle, '1.19.1', '1.17.0')
+    replace_once(gradle, '2.11.0', '2.9.3')
+    replace_once(gradle, '1.13.0', '1.10.1')
+    replace_once(gradle, '1.8.0', '1.7.1')
+    replace_once(gradle, '3.18.2', '3.15.0')
+    replace_once(gradle, '5.5.0', '5.1.0')
+    replace_once(gradle, '1.11.0', '1.9.0')
+    replace_once(gradle, '1.10.0', '1.9.0')
 
     replace_once(gradle, 'applicationId = "com.geode.launcher"', 'applicationId = "com.amethisty.launcher"')
     replace_once(gradle, "versionCode = 31", "versionCode = 1")
