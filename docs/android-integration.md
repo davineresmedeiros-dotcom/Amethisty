@@ -25,7 +25,9 @@ At this point the launcher has already loaded Cocos and applied its startup patc
 
 ## Target version notes
 
-The launcher source identifies Geometry Dash's package as com.robtopx.geometryjump. Its current Constants.kt declares supported version string 2.2.144 and supported version code 41. Amethisty targets 2.2091, so compatibility of the launcher itself with that target must be checked and updated before building/testing. Do not assume that the current upstream launcher release supports the target version.
+- Target Geometry Dash Android version: 2.2.145.
+- Expected Android version code: 42; confirm against the exact APK metadata before using it as a hard compatibility gate.
+- The upstream launcher source consulted for this integration declares supported version string 2.2.144 and version code 41. Its compatibility checks must be updated and tested for 2.2.145 before building the integrated launcher.
 
 ## Current implementation status
 
@@ -41,7 +43,7 @@ Not implemented yet:
 
 - A complete Amethisty launcher application or APK patcher.
 - Automatic packaging of the native library into a launcher.
-- Verified Cocos/game bindings or hooks for Geometry Dash 2.2091.
+- Verified Cocos/game bindings or hooks for Geometry Dash 2.2.145.
 - ZIP archive reading, manifest.json parsing, extraction, or mod loading.
 
-Do not add hooks or guessed offsets until the exact 2.2091 native binary and bindings are verified. This repository has not been compiled or device-tested by the project assistant.
+Do not add hooks or guessed offsets until the exact 2.2.145 native binary and bindings are verified. This repository has not been compiled or device-tested by the project assistant.
