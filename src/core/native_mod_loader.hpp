@@ -1,0 +1,31 @@
+#pragma once
+#include <cstdint>
+#include <string>
+namespace amethisty {
+constexpr std::uint32_t kModApiVersion = 1;
+struct ModHostApi {
+    std::uint32_t structSize;
+    std::uint32_t apiVersion;
+    void (*log)(int level, const char* message);
+};
+using ModApiVersionFn = std::uint32_t (*)();
+using ModInitFn = bool (*)(const ModHostApi*);
+using ModShutdownFn = void (*)();
+class NativeMod {
+public:
+    NativeMod() noexcept = default;
+    ~NativeMod();
+    NativeMod(const NativeMod&) = delete;
+    NativeMod& operator=(const NativeMod&) = delete;
+    NativeMod(NativeMod&& other) noexcept;
+    NativeMod& operator=(NativeMod&& other) noexcept;
+    bool loaded() const noexcept;
+    void unload() noexcept;
+private:
+    friend bool loadNativeMod(const std::string&, const ModHostApi&, NativeMod&, std::string&);
+    void* handle_ = nullptr;
+    ModShutdownFn shutdown_ = nullptr;
+};
+bool isArm64ElfLibrary(const std::string& path, std::string& error);
+bool loadNativeMod(const std::string& path, const ModHostApi& host, NativeMod& output, std::string& error);
+}

@@ -9,6 +9,7 @@ add_library(amethisty SHARED
     src/core/mod_manager.cpp
     src/core/manifest.cpp
     src/core/package_reader.cpp
+    src/core/native_mod_loader.cpp
 )
 target_include_directories(amethisty PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/jsmn
@@ -31,4 +32,9 @@ if(BUILD_TESTING)
     target_compile_options(amethisty_package_tests PRIVATE -Wall -Wextra)
     target_link_libraries(amethisty_package_tests PRIVATE z)
     add_test(NAME amethisty_package_tests COMMAND amethisty_package_tests)
+    add_executable(amethisty_native_loader_tests tests/native_mod_loader_test.cpp src/core/native_mod_loader.cpp)
+    target_include_directories(amethisty_native_loader_tests PRIVATE src/core)
+    target_compile_options(amethisty_native_loader_tests PRIVATE -Wall -Wextra)
+    target_link_libraries(amethisty_native_loader_tests PRIVATE dl)
+    add_test(NAME amethisty_native_loader_tests COMMAND amethisty_native_loader_tests)
 endif()
