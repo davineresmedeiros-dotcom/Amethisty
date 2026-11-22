@@ -33,7 +33,9 @@ jobs:
       - name: Install Android SDK
         uses: android-actions/setup-android@v3
         with:
-          packages: platform-tools;platforms;android-37
+          packages: |
+            platform-tools
+            platforms;android-37
 
       - name: Install CMake, Ninja and zlib headers
         run: sudo apt-get update && sudo apt-get install -y cmake ninja-build zlib1g-dev
