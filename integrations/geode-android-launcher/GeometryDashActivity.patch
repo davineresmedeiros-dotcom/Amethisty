@@ -1,7 +1,7 @@
 diff --git a/app/src/main/java/com/geode/launcher/GeometryDashActivity.kt b/app/src/main/java/com/geode/launcher/GeometryDashActivity.kt
 --- a/app/src/main/java/com/geode/launcher/GeometryDashActivity.kt
 +++ b/app/src/main/java/com/geode/launcher/GeometryDashActivity.kt
-@@ -181,2 +181,5 @@
+@@ -181,3 +181,6 @@
          LauncherFix.performPatches()
  
 +        // Load Amethisty after Cocos and launcher patches are initialized.
