@@ -1,5 +1,6 @@
 #include "mod_manager.hpp"
 #include "package_reader.hpp"
+#include "native_mod_loader.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -120,6 +121,24 @@ bool ModManager::scanAndExtract(const std::string& modsDirectory,
         candidate.libraryPath = package.libraryPath;
     }
     return true;
+}
+
+
+bool ModManager::loadNativeMods(const ModHostApi& host) {
+    bool allLoaded = true;
+    for (ModCandidate& candidate : m_candidates) {
+        if (!candidate.valid || candidate.libraryPath.empty()) continue;
+        std::string error;
+        if (!loadNativeMod(candidate.libraryPath, host, candidate.nativeModule, error)) {
+            candidate.loaded = false;
+            candidate.error = error;
+            allLoaded = false;
+            continue;
+        }
+        candidate.loaded = true;
+        candidate.error.clear();
+    }
+    return allLoaded;
 }
 
 const std::vector<ModCandidate>& ModManager::candidates() const noexcept {

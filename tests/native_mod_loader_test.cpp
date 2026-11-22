@@ -13,6 +13,15 @@ int main() {
     }
     if(error.empty()) { std::cerr<<"FAILED: missing ELF error\n"; unlink(temp); return 1; }
     unlink(temp);
+    amethisty::ModHostApi host{sizeof(amethisty::ModHostApi), amethisty::kModApiVersion, nullptr};
+    amethisty::NativeMod mod;
+    if(amethisty::loadNativeMod(temp,host,mod,error) || mod.loaded()) {
+        std::cerr<<"FAILED: invalid native module loaded\\n"; unlink(temp); return 1;
+    }
+    amethisty::ModHostApi wrong{sizeof(amethisty::ModHostApi), 99, nullptr};
+    if(amethisty::loadNativeMod(temp,wrong,mod,error) || error.empty()) {
+        std::cerr<<"FAILED: incompatible host API accepted\\n"; unlink(temp); return 1;
+    }
     std::cout<<"Amethisty native loader ELF checks passed.\n";
     return 0;
 }

@@ -15,10 +15,10 @@ The project separates package handling from game integration so each layer can b
 - Add game hooks only after target bindings and offsets are verified.
 
 ## 3. Native module loading
-- [ ] Confirm process ABI and package ABI before loading.
-- [ ] Define and document the native mod entry symbol and API version.
-- [ ] Load only validated extracted libraries from app-private storage.
-- [ ] Isolate failures per mod and report them through the host logger.
+- [x] Confirm library ELF class, endianness, and AArch64 machine type before loading.
+- [x] Define and document native mod entry symbols and API version 1.
+- [x] Add an opt-in ModManager load stage for validated extracted libraries.
+- [x] Isolate load failures per mod and retain per-candidate error messages.
 
 ## 4. Device validation
 - [x] Native tests for valid package, traversal rejection, missing library, and ModManager integration.
