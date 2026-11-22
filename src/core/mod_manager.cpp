@@ -48,7 +48,7 @@ bool ModManager::scan(const std::string& modsDirectory) {
     if (!directory) return false;
 
     while (dirent* entry = readdir(directory)) {
-        if (!entry->d_name || entry->d_name[0] == '.') continue;
+        if (entry->d_name[0] == '.') continue;
         if (!hasPackageExtension(entry->d_name)) continue;
 
         const std::string packagePath = joinPath(modsDirectory, entry->d_name);
