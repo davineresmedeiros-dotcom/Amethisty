@@ -25,7 +25,7 @@ The package root must contain `manifest.json`. The native module filename must m
   "version": "1.0.0",
   "author": "Author",
   "description": "A short description.",
-  "game": "2.2091",
+  "game": "2.2.145",
   "library": "mod/libExampleMod.so"
 }
 ```
@@ -35,7 +35,7 @@ The package root must contain `manifest.json`. The native module filename must m
 - `format` must be the integer `1`.
 - `id` must be unique and use lowercase reverse-domain-style identifiers.
 - `name`, `version`, and `library` must be non-empty strings.
-- `game` must match the supported Geometry Dash version.
+- `game` must match the supported Geometry Dash version (2.2.145).
 - `library` must be a relative path inside the archive, use forward slashes, and point to a regular file.
 - Reject absolute paths, parent-directory components (`..`), duplicate manifest keys, malformed JSON, duplicate mod IDs, and missing native libraries.
 - Extraction must stay inside the loader's private mod directory. Never trust archive entry paths.
