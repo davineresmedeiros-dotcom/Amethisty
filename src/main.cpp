@@ -1,5 +1,7 @@
 #if defined(__ANDROID__)
 #include "android/game_runtime.hpp"
+#include "android/game_ui_bridge.hpp"
+#include <amethisty/game_ui_api.hpp>
 #include "core/mod_manager.hpp"
 #include <amethisty/mod_api.hpp>
 #include <android/log.h>
@@ -56,6 +58,21 @@ Java_com_amethisty_launcher_NativeBridge_initializeNative(
     }
     if (!allLoaded) logInfo("Some mods failed; continuing with successfully loaded mods.");
     return JNI_TRUE;
+}
+extern "C" AMETHISTY_GAME_UI_EXPORT std::size_t amethisty_get_mod_count() {
+    return g_modManager.candidates().size();
+}
+extern "C" AMETHISTY_GAME_UI_EXPORT bool amethisty_get_mod_info(
+    std::size_t index, const char** id, const char** name,
+    const char** version, bool* loaded) {
+    const auto& candidates = g_modManager.candidates();
+    if (index >= candidates.size() || !id || !name || !version || !loaded) return false;
+    const auto& mod = candidates[index];
+    *id = mod.id.c_str();
+    *name = mod.name.c_str();
+    *version = mod.version.c_str();
+    *loaded = mod.loaded;
+    return true;
 }
 extern "C" JNIEXPORT void JNICALL JNI_OnUnload(JavaVM*, void*) { logInfo("Amethisty JNI library unloading."); }
 #else
