@@ -30,7 +30,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
     return JNI_VERSION_1_6;
 }
 extern "C" JNIEXPORT jboolean JNICALL
-Java_com_geode_launcher_AmethistyLoader_initializeNative(
+Java_com_amethisty_launcher_NativeBridge_initializeNative(
     JNIEnv* env, jclass, jstring modsDirectory, jstring privateDirectory) {
     if (!modsDirectory || !privateDirectory) { logInfo("Mod directory arguments are null."); return JNI_FALSE; }
     const auto status = amethisty::android::inspectLoadedGame();
