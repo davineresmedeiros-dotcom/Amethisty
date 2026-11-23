@@ -27,12 +27,17 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android platform
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Install Android platform and native toolchain
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
 
-      - name: Build standalone Amethisty APK
+      - name: Build independent Amethisty APK with native library
         run: gradle --no-daemon -p android assembleDebug
 
+      - name: Verify APK contains arm64 native loader
+        run: |
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          unzip -l "$APK" | grep -E 'lib/arm64-v8a/libamethisty.so'
+      
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
