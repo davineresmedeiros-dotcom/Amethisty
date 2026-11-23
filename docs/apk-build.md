@@ -1,19 +1,9 @@
-# Building the Amethisty APK
+# Independent Amethisty APK
 
-The APK workflow is a manual GitHub Actions workflow: Actions → Build Amethisty APK (arm64) → Run workflow.
+The former APK workflow was removed. It checked out and modified Geode Android Launcher, so its output was not the independent Amethisty launcher requested.
 
-It checks out a pinned revision of the Geode Android Launcher under its BSL-1.0 license, builds Amethisty for arm64-v8a, applies a small scripted integration, and builds the installable standard-debug APK.
+**There is currently no APK build workflow or independent installable APK in this repository.** Do not install or distribute the previous Geode-derived artifact as an Amethisty build.
 
-The preparation script:
-- changes the application ID to com.amethisty.launcher;
-- brands the launcher as Amethisty;
-- limits the APK to arm64-v8a, matching the native loader;
-- updates launcher compatibility metadata to Geometry Dash 2.2.145 (expected version code 42);
-- inserts Amethisty initialization after the launcher startup patches;
-- packages libamethisty.so and the upstream/license notices.
+The independent Android application still needs to be implemented. Its version compatibility check must query the installed Geometry Dash package through Android PackageManager and compare the actual `versionName` and `longVersionCode` against values verified from a genuine GD 2.2.145 arm64 installation. Do not infer or hardcode version code 42 without verifying the installed APK metadata.
 
-The resulting debug APK is signed with the standard Android debug key and can be installed for testing. It is not a release-signed distribution build. The workflow artifact expires after 14 days.
-
-Before distributing, verify the exact Geometry Dash APK version code on-device, test launch and mod import, review all upstream/third-party notices, and create a release signing configuration. Native mods are not sandboxed.
-
-The preparation script also replaces the launcher icon with an original Amethisty crystal vector drawable.
+Once the independent launcher and runtime integration are implemented, add a manual GitHub Actions workflow to build the APK.
