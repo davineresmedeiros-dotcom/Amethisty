@@ -21,9 +21,8 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         nativeAvailable = try {
-            NativeBridge // trigger this app's native library load
-            true
-        } catch (error: UnsatisfiedLinkError) {
+            NativeBridge.isLoaded()
+        } catch (_: UnsatisfiedLinkError) {
             false
         }
         buildUi()
@@ -80,7 +79,8 @@ class MainActivity : Activity() {
         val info = installedGameInfo()
         if (info == null) {
             status.text = "Geometry Dash não encontrado.\\nInstale o jogo oficial para continuar.\\n" +
-                "Biblioteca nativa Amethisty: " + if (nativeAvailable) "carregada no launcher" else "indisponível"
+                "Biblioteca nativa Amethisty: " +
+                (if (nativeAvailable) "carregada no launcher" else "indisponível")
             launchButton.isEnabled = false
             return
         }
@@ -92,7 +92,8 @@ class MainActivity : Activity() {
         status.text = "Geometry Dash detectado\\nVersão: $version\\nVersion code real: $code\\n" +
             (if (correct) "Compatibilidade do pacote: versão-alvo encontrada" else
                 "Versão diferente da alvo ($TARGET_VERSION). Não foi bloqueada por um código inventado.") +
-            "\\nBiblioteca nativa Amethisty: " + if (nativeAvailable) "carregada no launcher" else "indisponível"
+            "\\nBiblioteca nativa Amethisty: " +
+            (if (nativeAvailable) "carregada no launcher" else "indisponível")
         launchButton.isEnabled = packageManager.getLaunchIntentForPackage(GD_PACKAGE) != null
     }
 
