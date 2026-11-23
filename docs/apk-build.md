@@ -1,9 +1,21 @@
-# Independent Amethisty APK
+# Independent Amethisty Android app
 
-The former APK workflow was removed. It checked out and modified Geode Android Launcher, so its output was not the independent Amethisty launcher requested.
+The manual GitHub Actions workflow **Build independent Amethisty APK** builds the app under `android/` and uploads `Amethisty-independent-debug-apk`.
 
-**There is currently no APK build workflow or independent installable APK in this repository.** Do not install or distribute the previous Geode-derived artifact as an Amethisty build.
+This app is authored as an independent Android project; it does not check out, rename, or build the Geode Android Launcher.
 
-The independent Android application still needs to be implemented. Its version compatibility check must query the installed Geometry Dash package through Android PackageManager and compare the actual `versionName` and `longVersionCode` against values verified from a genuine GD 2.2.145 arm64 installation. Do not infer or hardcode version code 42 without verifying the installed APK metadata.
+## Implemented in this prototype
 
-Once the independent launcher and runtime integration are implemented, add a manual GitHub Actions workflow to build the APK.
+- Application ID: `com.amethisty.launcher`.
+- Reads the installed Geometry Dash package using Android PackageManager.
+- Displays the actual installed `versionName` and `longVersionCode`.
+- Reports whether the version name is the target `2.2.145`; it does not assume that version code 42 is correct.
+- Launches the installed game using its package launch intent.
+
+## Not implemented yet
+
+This APK is **not yet a functioning native mod loader**. The app does not load GD's native libraries in its own process, does not inject `libamethisty.so` into the game, and does not load `.amethyst` mods at runtime. The native loader core is currently separate.
+
+The previous Geode-derived APK workflow was removed and must not be used. The independent runtime integration and mod UI remain future work. Do not describe this prototype as a finished loader until those parts are implemented and tested on the target GD 2.2.145 arm64 installation.
+
+The debug APK is for testing only; it is not release-signed.
