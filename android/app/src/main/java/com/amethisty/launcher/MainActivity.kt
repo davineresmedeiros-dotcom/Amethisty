@@ -9,7 +9,6 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
@@ -89,7 +88,7 @@ class MainActivity : Activity() {
             setOnClickListener { showSettings() }
         }
 
-        controls.addView(launchButton)
+        controls.addView(launchButton, LinearLayout.LayoutParams(dp(220), dp(64)))
         controls.addView(settingsButton, LinearLayout.LayoutParams(dp(64), dp(64)).apply {
             leftMargin = dp(12)
         })
