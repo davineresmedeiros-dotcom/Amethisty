@@ -78,7 +78,7 @@ class MainActivity : Activity() {
     private fun refreshGameInfo() {
         val info = installedGameInfo()
         if (info == null) {
-            status.text = "Geometry Dash não encontrado.\\nInstale o jogo oficial para continuar.\\n" +
+            status.text = "Geometry Dash não encontrado.\nInstale o jogo oficial para continuar.\n" +
                 "Biblioteca nativa Amethisty: " +
                 (if (nativeAvailable) "carregada no launcher" else "indisponível")
             launchButton.isEnabled = false
@@ -89,10 +89,10 @@ class MainActivity : Activity() {
         }
         val version = info.versionName ?: "desconhecida"
         val correct = version == TARGET_VERSION
-        status.text = "Geometry Dash detectado\\nVersão: $version\\nVersion code real: $code\\n" +
+        status.text = "Geometry Dash detectado\nVersão: $version\nVersion code real: $code\n" +
             (if (correct) "Compatibilidade do pacote: versão-alvo encontrada" else
                 "Versão diferente da alvo ($TARGET_VERSION). Não foi bloqueada por um código inventado.") +
-            "\\nBiblioteca nativa Amethisty: " +
+            "\nBiblioteca nativa Amethisty: " +
             (if (nativeAvailable) "carregada no launcher" else "indisponível")
         launchButton.isEnabled = packageManager.getLaunchIntentForPackage(GD_PACKAGE) != null
     }
