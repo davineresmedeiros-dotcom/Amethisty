@@ -6,6 +6,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(amethisty SHARED
     src/main.cpp
     src/android/game_runtime.cpp
+    src/android/game_ui_bridge.cpp
     src/core/mod_manager.cpp
     src/core/manifest.cpp
     src/core/package_reader.cpp
