@@ -1,30 +1,28 @@
 # Amethisty
 
-Amethisty is an Android native mod-loader project targeting Geometry Dash 2.2.145. Verify the exact installed APK version code before enforcing compatibility.
+Amethisty is an independent Android native mod-loader project for Geometry Dash, targeting the user's installed GD 2.2.145 (arm64).
 
 ## Current status
-Native core prototype and launcher source integration in progress. Not yet a standalone APK.
 
-Implemented:
-- JNI entry and Android ABI/runtime inspection.
-- Format-1 manifest validation for GD 2.2.145.
-- Bounded ZIP package reader and private extraction for .amethyst.
-- ModManager package discovery, validation, duplicate-ID rejection, and extraction.
-- Arm64 ELF validation and native module loading through the public include/amethisty/mod_api.hpp API v1.
-- Per-mod load errors and native tests in GitHub Actions.
-- Launcher adapter source that initializes package loading after game libraries are ready.
+The native loader core is a prototype. **There is not yet a working independent Amethisty APK.**
 
-See Android integration, package format, and native mod API documentation.
+Implemented in the native core:
+- JNI entry and Android runtime inspection.
+- Format-1 mod manifest validation.
+- Bounded ZIP reader and private extraction for `.amethyst` packages.
+- Mod discovery, validation, duplicate-ID rejection, and extraction.
+- arm64 ELF validation and native module loading through `include/amethisty/mod_api.hpp` API v1.
+- Native tests in GitHub Actions.
 
-## Next milestones
-1. Verify integrated runtime on a backed-up GD 2.2.145 installation.
-2. Finish launcher integration and compatibility checks.
-3. Build the Amethisty APK with package import and mod management UI.
+The previous APK workflow and Geode Android Launcher adaptation were removed because they produced a Geode-derived launcher, not the independent app requested. Do not use the APK artifact from that workflow as an Amethisty release.
+
+## Remaining work
+
+1. Create Amethisty's own Android launcher/application and package identity.
+2. Detect the installed Geometry Dash package and read its actual `versionName` and `longVersionCode` from Android PackageManager; verify the target against a real 2.2.145 install rather than hardcoding an unverified number.
+3. Implement the game startup/runtime integration independently.
+4. Add mod import and management UI, then build and test an APK.
 
 Native mods execute inside the game process and are not sandboxed. Load only mods from sources you trust.
 
 Amethisty's own code is MIT licensed; third-party components retain their original licenses and notices.
-
-## APK build
-
-The arm64 launcher APK is built through the manual GitHub Actions workflow. See [APK build instructions](docs/apk-build.md).
