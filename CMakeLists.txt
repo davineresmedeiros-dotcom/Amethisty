@@ -19,7 +19,6 @@ target_include_directories(amethisty PRIVATE
 target_compile_options(amethisty PRIVATE -Wall -Wextra -fvisibility=hidden)
 target_link_libraries(amethisty PRIVATE z)
 if(ANDROID)
-    target_sources(amethisty PRIVATE src/android/game_ui_bridge.cpp)
     target_link_libraries(amethisty PRIVATE log dl)
 endif()
 include(CTest)
