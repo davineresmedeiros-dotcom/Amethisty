@@ -16,9 +16,16 @@ private const val TARGET_VERSION = "2.2.145"
 class MainActivity : Activity() {
     private lateinit var status: TextView
     private lateinit var launchButton: Button
+    private var nativeAvailable = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        nativeAvailable = try {
+            NativeBridge // trigger this app's native library load
+            true
+        } catch (error: UnsatisfiedLinkError) {
+            false
+        }
         buildUi()
         refreshGameInfo()
     }
@@ -72,7 +79,8 @@ class MainActivity : Activity() {
     private fun refreshGameInfo() {
         val info = installedGameInfo()
         if (info == null) {
-            status.text = "Geometry Dash não encontrado.\nInstale o jogo oficial para continuar."
+            status.text = "Geometry Dash não encontrado.\\nInstale o jogo oficial para continuar.\\n" +
+                "Biblioteca nativa Amethisty: " + if (nativeAvailable) "carregada no launcher" else "indisponível"
             launchButton.isEnabled = false
             return
         }
@@ -81,9 +89,10 @@ class MainActivity : Activity() {
         }
         val version = info.versionName ?: "desconhecida"
         val correct = version == TARGET_VERSION
-        status.text = "Geometry Dash detectado\nVersão: $version\nVersion code real: $code\n" +
-            if (correct) "Compatibilidade do pacote: versão-alvo encontrada" else
-                "Versão diferente da alvo ($TARGET_VERSION). Não foi bloqueada por um código inventado."
+        status.text = "Geometry Dash detectado\\nVersão: $version\\nVersion code real: $code\\n" +
+            (if (correct) "Compatibilidade do pacote: versão-alvo encontrada" else
+                "Versão diferente da alvo ($TARGET_VERSION). Não foi bloqueada por um código inventado.") +
+            "\\nBiblioteca nativa Amethisty: " + if (nativeAvailable) "carregada no launcher" else "indisponível"
         launchButton.isEnabled = packageManager.getLaunchIntentForPackage(GD_PACKAGE) != null
     }
 
