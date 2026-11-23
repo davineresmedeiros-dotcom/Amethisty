@@ -75,12 +75,12 @@ def main() -> None:
                  'android:icon="@drawable/ic_amethisty_launcher"')
 
     insertion = (
-        "        LauncherFix.performPatches()\\n\\n"
-        "        // Initialize Amethisty after Cocos and launcher patches are ready.\\n"
-        "        AmethistyLoader.load(this)\\n\\n"
+        "        LauncherFix.performPatches()\n\n"
+        "        // Initialize Amethisty after Cocos and launcher patches are ready.\n"
+        "        AmethistyLoader.load(this)\n\n"
         "        loadInternalMods()"
     )
-    replace_once(activity, "        LauncherFix.performPatches()\\n\\n        loadInternalMods()", insertion)
+    replace_once(activity, "        LauncherFix.performPatches()\n\n        loadInternalMods()", insertion)
 
     icon_source = repo / "integrations/geode-android-launcher/ic_amethisty_launcher.xml"
     icon_target = root / "app/src/main/res/drawable/ic_amethisty_launcher.xml"
