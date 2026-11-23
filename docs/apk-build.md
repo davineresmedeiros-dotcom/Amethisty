@@ -15,6 +15,7 @@ The workflow verifies that the APK contains the native library and that the stan
 - Reports whether the version name is the target `2.2.145`; it does not assume that version code 42 is correct.
 - Launches the installed game using its package launch intent.
 - Compiles Amethisty's native loader core as `libamethisty.so` for arm64-v8a.
+- Imports `.amethyst` package files through Android's document picker into the launcher's private mod staging directory and shows the number stored.
 
 ## Not implemented yet
 
