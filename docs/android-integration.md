@@ -1,27 +1,26 @@
-# Android and Geometry Dash integration
+# Independent Android and Geometry Dash integration
 
-## Launcher startup point
-The Android launcher must load Geometry Dash's native libraries and apply startup patches before Amethisty initializes. The Geode Android launcher is the integration reference, particularly GeometryDashActivity.tryLoadGame().
+## Current independent launcher prototype
 
-The intended insertion is after LauncherFix.performPatches() and before loadInternalMods(). At that point Amethisty checks that libcocos2dcpp.so is already loaded. It does not load game libraries itself or install guessed hooks.
+The Android app in `android/` is an original, standalone Amethisty application with package ID `com.amethisty.launcher`. It queries the installed Geometry Dash package with Android PackageManager, displays the real `versionName` and `longVersionCode`, and starts the game through its launch intent.
 
-## Amethisty runtime
-The Kotlin adapter loads libamethisty.so and prepares:
-- app-specific external amethisty/mods for imported .amethyst packages;
-- private app storage files/amethisty for extracted native libraries.
+It does **not** currently load the game's native libraries, inject Amethisty into the game's process, or load mods. The previous APK workflow that adapted Geode Android Launcher was removed because it did not satisfy the independent-project requirement.
 
-It calls JNI initialization, which scans and validates packages, extracts declared libraries, verifies AArch64 ELF format, checks public mod API version, and attempts each native mod independently. A bad mod is logged and does not intentionally stop game startup.
+## Target and version verification
 
-## Target version
-- Geometry Dash Android 2.2.145.
-- Expected version code 42 is not authoritative until checked against exact APK metadata.
-- The upstream launcher reference had compatibility checks for 2.2.144/version code 41; update and verify them for 2.2.145 in the APK project.
+Target game: Geometry Dash Android 2.2.145, arm64-v8a.
 
-## Current limitations
-- The native core and launcher source adapter are not a complete standalone Amethisty APK.
-- No in-game mod management UI or package import UI exists yet.
-- No verified Geometry Dash 2.2.145 bindings/hooks are installed.
-- Native mods execute inside the game process and are not sandboxed.
-- Device validation on the target game installation remains required.
+Do not assume version code 42. The launcher reads the installed package's actual `longVersionCode`; the exact target version code must be recorded from a verified 2.2.145 APK/device. Version-name matching alone is not proof of binary compatibility.
 
-Do not add guessed offsets or hooks. Confirm the exact game binary, version, ABI, and binding data first.
+## Native core status
+
+The C++ loader core can validate manifests and packages, extract native payloads, verify AArch64 ELF files, and load native modules when called in the appropriate process. It is not yet connected to the independent Android app or Geometry Dash runtime.
+
+## Remaining work
+
+1. Implement an independent runtime that loads the exact target game's required assets and native libraries, or another legitimate, verified in-process integration.
+2. Confirm the exact 2.2.145 APK metadata and arm64 native binaries.
+3. Connect the native loader after the game's required runtime initialization.
+4. Implement mod import/management UI and end-to-end testing.
+
+Do not add guessed offsets, binary patches, or hooks. Verify the target binary and ABI before implementing runtime integration. Native mods execute inside the game process and are not sandboxed.
