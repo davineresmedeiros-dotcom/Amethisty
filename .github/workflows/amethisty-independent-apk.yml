@@ -1,4 +1,4 @@
-name: Build independent Amethisty APK
+name: Build independent Amethisty APK and native library
 
 on:
   workflow_dispatch:
@@ -30,14 +30,33 @@ jobs:
       - name: Install Android platform and native toolchain
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
 
-      - name: Build independent Amethisty APK with native library
+      - name: Build Amethisty from its independent source
         run: gradle --no-daemon -p android assembleDebug
 
-      - name: Verify APK contains arm64 native loader
+      - name: Verify APK contains arm64 native library
         run: |
           APK="android/app/build/outputs/apk/debug/app-debug.apk"
           unzip -l "$APK" | grep -E 'lib/arm64-v8a/libamethisty.so'
-      
+
+      - name: Export standalone Amethisty .so
+        run: |
+          set -euo pipefail
+          SO="$(find android/app/build -type f -path '*/arm64-v8a/libamethisty.so' -print -quit)"
+          test -n "$SO"
+          mkdir -p dist/amethisty
+          cp "$SO" dist/amethisty/libamethisty.so
+          file dist/amethisty/libamethisty.so
+          readelf -h dist/amethisty/libamethisty.so | grep -E 'Machine:.*AArch64'
+          sha256sum dist/amethisty/libamethisty.so
+
+      - name: Upload standalone native library
+        uses: actions/upload-artifact@v4
+        with:
+          name: Amethisty-native-arm64-v8a-so
+          path: dist/amethisty/libamethisty.so
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
