@@ -49,6 +49,8 @@ def main() -> None:
     replace_all(gradle, '5.5.0', '5.1.0')
     replace_all(gradle, '1.11.0', '1.9.0')
     replace_once(gradle, '1.10.0', '1.9.0')
+    # Renderer 0.42+ requires compileSdk 37; use the compatible 0.38.1 release.
+    replace_all(gradle, '0.46.0', '0.38.1')
 
     replace_once(gradle, 'applicationId = "com.geode.launcher"', 'applicationId = "com.amethisty.launcher"')
     replace_once(gradle, "versionCode = 31", "versionCode = 1")
@@ -73,12 +75,12 @@ def main() -> None:
                  'android:icon="@drawable/ic_amethisty_launcher"')
 
     insertion = (
-        "        LauncherFix.performPatches()\n\n"
-        "        // Initialize Amethisty after Cocos and launcher patches are ready.\n"
-        "        AmethistyLoader.load(this)\n\n"
+        "        LauncherFix.performPatches()\\n\\n"
+        "        // Initialize Amethisty after Cocos and launcher patches are ready.\\n"
+        "        AmethistyLoader.load(this)\\n\\n"
         "        loadInternalMods()"
     )
-    replace_once(activity, "        LauncherFix.performPatches()\n\n        loadInternalMods()", insertion)
+    replace_once(activity, "        LauncherFix.performPatches()\\n\\n        loadInternalMods()", insertion)
 
     icon_source = repo / "integrations/geode-android-launcher/ic_amethisty_launcher.xml"
     icon_target = root / "app/src/main/res/drawable/ic_amethisty_launcher.xml"
