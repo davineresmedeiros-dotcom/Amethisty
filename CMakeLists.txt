@@ -6,7 +6,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(amethisty SHARED
     src/main.cpp
     src/android/game_runtime.cpp
-    src/android/game_ui_bridge.cpp
     src/core/mod_manager.cpp
     src/core/manifest.cpp
     src/core/package_reader.cpp
@@ -20,6 +19,7 @@ target_include_directories(amethisty PRIVATE
 target_compile_options(amethisty PRIVATE -Wall -Wextra -fvisibility=hidden)
 target_link_libraries(amethisty PRIVATE z)
 if(ANDROID)
+    target_sources(amethisty PRIVATE src/android/game_ui_bridge.cpp)
     target_link_libraries(amethisty PRIVATE log dl)
 endif()
 include(CTest)
