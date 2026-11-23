@@ -10,5 +10,8 @@ object NativeBridge {
     }
 
     @JvmStatic
+    fun isLoaded(): Boolean = true
+
+    @JvmStatic
     external fun initializeNative(modsDirectory: String, privateDirectory: String): Boolean
 }
